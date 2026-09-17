@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
 import "dotenv/config";
-import fs from "fs/promises";
 import jwt from "jsonwebtoken";
+import { loadData, writeData } from "../utils/Tools.js";
 
-const DATA = "./data/users.json";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export function hashPassword(password) {
@@ -14,33 +13,46 @@ export function compareHash(password, hash) {
     return bcrypt.compare(password, hash);
 }
 
-export async function loadData() {
-    const data = await fs.readFile(DATA, "utf-8");
-    return JSON.parse(data);
-}
+export async function createNewUser(username, email, phone, password) {
+    const users = await loadData();
 
-export async function writeData(data) {
-    await fs.writeFile(DATA, JSON.stringify(data, null, 4), "utf-8");
-}
+    if (users.find((u) => u.email === email)) {
+        throw Object.assign(new Error("user already exist"), { status: 409 });
+    }
 
-export async function createNewUser(
-    allUsers,
-    username,
-    email,
-    phone,
-    password,
-) {
     const hashedPass = await hashPassword(password);
 
-    const nextId = Math.max(...allUsers.map((u) => u.id), 0) + 1;
-
-    return {
-        id: nextId,
+    const newUser = {
+        id: Math.max(...users.map((u) => u.id), 0) + 1,
         username,
         email,
         phone,
         password: hashedPass,
     };
+
+    users.push(newUser);
+    await writeData(users);
+
+    return newUser;
+}
+
+export async function loginUser(username, phone, password) {
+    const users = await loadData();
+    const user = users.find(
+        (u) => u.phone === phone && u.username === username,
+    );
+
+    if (!user) {
+        throw Object.assign(new Error(`user '${username}' not exist in system`), {
+            status: 404,
+        });
+    }
+
+    const isMatch = await compareHash(password, user.password);
+    if (!isMatch)
+        throw Object.assign(new Error("password incorrect"), { status: 401 });
+
+    return generateToken({ id: user.id, email: user.email });
 }
 
 export function generateToken(payload) {
@@ -50,7 +62,6 @@ export function generateToken(payload) {
     return token;
 }
 
-export function verifyToken() {
-    return jwt.verify(token, secret);
+export function verifyToken(token) {
+    return jwt.verify(token, JWT_SECRET);
 }
-
