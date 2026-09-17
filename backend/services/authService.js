@@ -13,13 +13,24 @@ export function compareHash(password, hash) {
     return bcrypt.compare(password, hash);
 }
 
-export async function createNewUser(username, email, phone, password) {
+export async function createNewUser({
+    firstName,
+    lastName,
+    email,
+    phone,
+    password,
+    city,
+    address,
+    age,
+    maritalStatus,
+    birthDate,
+}) {
     const users = await loadData();
 
     if (users.find((u) => u.email === email)) {
         throw Object.assign(
             new Error(
-                `משתמש '${username}' כבר קיים במערכת, אנא עבור לדף התחברות`,
+                `משתמש עם אימייל '${email}' כבר קיים במערכת, אנא עבור לדף התחברות`,
             ),
             { status: 409 },
         );
@@ -29,10 +40,16 @@ export async function createNewUser(username, email, phone, password) {
 
     const newUser = {
         id: Math.max(...users.map((u) => u.id), 0) + 1,
-        username,
+        firstName,
+        lastName,
         email,
         phone,
         password: hashedPass,
+        city,
+        address,
+        age,
+        maritalStatus,
+        birthDate,
     };
 
     users.push(newUser);
@@ -41,15 +58,13 @@ export async function createNewUser(username, email, phone, password) {
     return newUser;
 }
 
-export async function loginUser(username, phone, password) {
+export async function loginUser(phone, password) {
     const users = await loadData();
-    const user = users.find(
-        (u) => u.phone === phone && u.username === username,
-    );
+    const user = users.find((u) => u.phone === phone);
 
     if (!user) {
         throw Object.assign(
-            new Error(`משתמש '${username}' לא נמצא במערכת, אנא עבור לדף הרשמה`),
+            new Error(`משתמש עם טלפון '${phone}' לא נמצא במערכת, אנא עבור לדף הרשמה`),
             {
                 status: 404,
             },

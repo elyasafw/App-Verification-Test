@@ -22,6 +22,6 @@ export async function apiRequest<T>(
         return res.data;
     } catch (error) {
         const axiosErr = error as AxiosError<{ error: string }>;
-        throw new Error(axiosErr.response?.data?.error || "request failed");
+        throw new Error(axiosErr.response?.data?.error || "הבקשה נכשלה ...");
     }
 }

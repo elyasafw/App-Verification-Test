@@ -7,7 +7,6 @@ const LoginPage = () => {
     const { login } = useAuthContext();
     const navigate = useNavigate();
 
-    const [username, setUsername] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -17,10 +16,10 @@ const LoginPage = () => {
         setError("");
 
         try {
-            await login({ username, phone, password });
+            await login({ phone, password });
             navigate("/profile");
         } catch (err) {
-            setError(err instanceof Error ? err.message : "login failed");
+            setError(err instanceof Error ? err.message : "כניסה נכשלה ...");
         }
     };
 
@@ -28,12 +27,6 @@ const LoginPage = () => {
         <div>
             <h1>התחברות</h1>
             <form onSubmit={handleSubmit}>
-                <FormField
-                    label="שם משתמש"
-                    type="text"
-                    value={username}
-                    onChange={setUsername}
-                />
                 <FormField
                     label="טלפון"
                     type="tel"

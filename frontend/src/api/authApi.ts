@@ -1,4 +1,4 @@
-import type { LoginUser, SignUpUser } from "../types/authTypes";
+import type { LoginUser, MaritalStatus, SignUpUser } from "../types/authTypes";
 import { apiRequest } from "./client";
 
 interface SignupResponse {
@@ -12,27 +12,28 @@ interface LoginResponse {
 
 export interface AuthUser {
     id: number;
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
+    city: string;
+    address: string;
+    age: number;
+    maritalStatus: MaritalStatus;
+    birthDate: string;
 }
 
-export function signupRequest({
-    username,
-    email,
-    phone,
-    password,
-}: SignUpUser) {
+export function signupRequest(newUser: SignUpUser) {
     return apiRequest<SignupResponse>("/signup", {
         method: "POST",
-        body: { username, email, phone, password },
+        body: newUser,
     });
 }
 
-export function loginRequest({ username, phone, password }: LoginUser) {
+export function loginRequest(credentials: LoginUser) {
     return apiRequest<LoginResponse>("/login", {
         method: "POST",
-        body: { username, phone, password },
+        body: credentials,
     });
 }
 
