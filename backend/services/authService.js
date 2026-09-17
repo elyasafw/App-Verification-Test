@@ -23,14 +23,9 @@ export async function writeData(data) {
     await fs.writeFile(DATA, JSON.stringify(data, null, 4), "utf-8");
 }
 
-export function getUserByEmail(users, email) {
-    const user = users.find((u) => u.email === email);
-    return user;
-}
-
 export async function createNewUser(
     allUsers,
-    userName,
+    username,
     email,
     phone,
     password,
@@ -41,18 +36,21 @@ export async function createNewUser(
 
     return {
         id: nextId,
-        userName,
+        username,
         email,
         phone,
         password: hashedPass,
     };
 }
 
-const generateToken = (payload) => {
-    const token = jwt.sign(payload, secret, {
+export function generateToken(payload) {
+    const token = jwt.sign(payload, JWT_SECRET, {
         expiresIn: "10m",
     });
     return token;
-};
+}
 
-export function verifiedUser() {}
+export function verifyToken() {
+    return jwt.verify(token, secret);
+}
+
