@@ -5,9 +5,12 @@ export async function getUserById(id) {
     const user = users.find((u) => u.id === id);
 
     if (!user) {
-        throw Object.assign(new Error("user not exist in system"), {
-            status: 404,
-        });
+        throw Object.assign(
+            new Error(`משתמש לא נמצא במערכת, אנא עבור לדף הרשמה`),
+            {
+                status: 404,
+            },
+        );
     }
 
     const { password, ...safeUser } = user;

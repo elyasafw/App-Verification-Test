@@ -17,7 +17,12 @@ export async function createNewUser(username, email, phone, password) {
     const users = await loadData();
 
     if (users.find((u) => u.email === email)) {
-        throw Object.assign(new Error("user already exist"), { status: 409 });
+        throw Object.assign(
+            new Error(
+                `משתמש '${username}' כבר קיים במערכת, אנא עבור לדף התחברות`,
+            ),
+            { status: 409 },
+        );
     }
 
     const hashedPass = await hashPassword(password);
@@ -43,14 +48,19 @@ export async function loginUser(username, phone, password) {
     );
 
     if (!user) {
-        throw Object.assign(new Error(`user '${username}' not exist in system`), {
-            status: 404,
-        });
+        throw Object.assign(
+            new Error(`משתמש '${username}' לא נמצא במערכת, אנא עבור לדף הרשמה`),
+            {
+                status: 404,
+            },
+        );
     }
 
     const isMatch = await compareHash(password, user.password);
     if (!isMatch)
-        throw Object.assign(new Error("password incorrect"), { status: 401 });
+        throw Object.assign(new Error("סיסמה שגויה ... נסה שוב"), {
+            status: 401,
+        });
 
     return generateToken({ id: user.id, email: user.email });
 }
