@@ -1,3 +1,4 @@
+import type { LoginUser, SignUpUser } from "../types/authTypes";
 import { apiRequest } from "./client";
 
 interface SignupResponse {
@@ -16,23 +17,19 @@ export interface AuthUser {
     phone: string;
 }
 
-export function signupRequest(
-    username: string,
-    email: string,
-    phone: string,
-    password: string,
-) {
+export function signupRequest({
+    username,
+    email,
+    phone,
+    password,
+}: SignUpUser) {
     return apiRequest<SignupResponse>("/signup", {
         method: "POST",
         body: { username, email, phone, password },
     });
 }
 
-export function loginRequest(
-    username: string,
-    phone: string,
-    password: string,
-) {
+export function loginRequest({ username, phone, password }: LoginUser) {
     return apiRequest<LoginResponse>("/login", {
         method: "POST",
         body: { username, phone, password },
