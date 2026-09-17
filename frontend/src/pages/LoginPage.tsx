@@ -32,6 +32,7 @@ const LoginPage = () => {
                     type="tel"
                     value={phone}
                     onChange={setPhone}
+                    min="10"
                 />
                 <FormField
                     label="סיסמה"

@@ -11,8 +11,10 @@ const HomePage = () => {
     return (
         <div>
             <h1>אפליקציית אימות משתמשים</h1>
-            <Link to="/login">התחברות</Link>
-            <Link to="/signup">הרשמה</Link>
+            <div className="home-links">
+                <Link to="/login">התחברות</Link>
+                <Link to="/signup">הרשמה</Link>
+            </div>
         </div>
     );
 };

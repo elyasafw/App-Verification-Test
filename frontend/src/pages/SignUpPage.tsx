@@ -82,7 +82,7 @@ const SignUpPage = () => {
                     type="tel"
                     value={phone}
                     onChange={setPhone}
-                    minLength={10}
+                    min="10"
                 />
                 <FormField
                     label="סיסמה"

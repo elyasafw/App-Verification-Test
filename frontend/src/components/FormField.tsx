@@ -5,6 +5,7 @@ interface FormFieldProps {
     onChange: (value: string) => void;
     minLength?: number;
     maxLength?: number;
+    min?: string;
     required?: boolean;
 }
 
