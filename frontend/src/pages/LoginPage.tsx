@@ -45,6 +45,8 @@ const LoginPage = () => {
                     type="password"
                     value={password}
                     onChange={setPassword}
+                    minLength={8}
+                    maxLength={14}
                 />
                 {error && <p>{error}</p>}
                 <button type="submit">התחבר</button>
